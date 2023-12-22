@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>External Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
+    <script src="https://cdn.tailwindcss.com/3.3.5"></script>
+    <script type="text/javascript">
+        var intentiallyClosed = false;
+
+        function sendMessage(msg, closeWindow) {
+            window.opener.postMessage({
+                'obcMessage': true,
+                'message': msg,
+            });
+            if (closeWindow) {
+                intentiallyClosed = true;
+                window.close();
+            }
+        }
+
+        window.onpagehide = function () {
+            if (!intentiallyClosed) {
+                sendMessage('Other window is now closed', true);
+            }
+        }
+
+        window.onload = function () {
+            sendMessage('Other window is now open');
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100 h-screen flex flex-col items-center justify-center p-4">
+    <div class="space-y-2 w-full max-w-xs">
+        <button onclick="sendMessage('Message with closing', true)"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Send and Close
+        </button>
+        <button onclick="sendMessage('Message without closing', false)"
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            Just Send
+        </button>
+    </div>
+</body>
+
+</html>
